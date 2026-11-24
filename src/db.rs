@@ -415,13 +415,23 @@ impl Db {
 
     pub fn open_with_env(env: Arc<dyn Env>, dir: &Path, opts: Options) -> Result<Db> {
         env.create_dir_all(dir)?;
-        let lock = env.lock(&dir.join("LOCK")).map_err(|e| {
-            if e.kind() == io::ErrorKind::WouldBlock {
-                Error::Locked(e.to_string())
-            } else {
-                Error::Io(e)
+        // Блокировка может на миг оказаться занятой не по-настоящему: дочерний процесс, запущенный из другого потока
+        // в момент fork, коротко держит копию дескриптора. Поэтому короткие повторы перед отказом.
+        let lock_path = dir.join("LOCK");
+        let mut attempt = 0;
+        let lock = loop {
+            match env.lock(&lock_path) {
+                Ok(l) => break l,
+                Err(e) if e.kind() == io::ErrorKind::WouldBlock => {
+                    attempt += 1;
+                    if attempt >= 20 {
+                        return Err(Error::Locked(e.to_string()));
+                    }
+                    std::thread::sleep(std::time::Duration::from_millis(10));
+                }
+                Err(e) => return Err(Error::Io(e)),
             }
-        })?;
+        };
 
         let mut ms = ManifestState::default();
         let current = dir.join("CURRENT");
