@@ -1,0 +1,8 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc f6850ec95be4433e13d17ab58d16c586a63a71c11898dad8037006262a01d3c7 # shrinks to ops = [Put(3, 0, 0), TakeSnapshot, Put(3, 0, 0), Compact, CheckSnapshot(0)]
+cc 57894c2dd144927726963cc64c81ae57181945fb6bd9af6a4929c76de7f88b90 # shrinks to ops = [Put(2, 0, 27), Batch([(11, Some(0)), (3, Some(0)), (4, None)]), Put(5, 0, 54), Put(0, 0, 71), Put(4, 0, 4), Put(1, 0, 23), Put(6, 0, 5), Put(18, 0, 7), TakeSnapshot, Put(8, 0, 75), Put(5, 0, 61), Put(13, 0, 0), Put(0, 0, 65), Put(1, 0, 71), Put(2, 0, 0), TakeSnapshot, Batch([(0, None), (0, None), (0, None), (1, None)]), Put(0, 0, 10), Put(14, 0, 3), Batch([(4, None), (1, None)]), Batch([(11, None), (7, Some(0)), (3, None)]), Batch([(1, None), (9, Some(0)), (18, None)]), Batch([(13, None)]), Del(2)]
