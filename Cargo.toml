@@ -1,0 +1,28 @@
+[package]
+name = "tinylsm"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89"
+description = "Встраиваемое LSM-хранилище без зависимостей: WAL, SSTable, фильтры Блума, уплотнение, снимки; проверка сбоев питания на симулированной файловой системе"
+license = "MIT"
+repository = "https://github.com/Oleg4311/tinylsm"
+readme = "README.md"
+keywords = ["lsm", "key-value", "database", "wal", "storage"]
+categories = ["database-implementations"]
+
+[dependencies]
+
+[dev-dependencies]
+proptest = { version = "1", default-features = false, features = ["std"] }
+
+[[bin]]
+name = "tinylsm"
+path = "src/bin/tinylsm.rs"
+
+[[bin]]
+name = "crash_worker"
+path = "src/bin/crash_worker.rs"
+
+[profile.release]
+debug = false
+lto = "thin"
